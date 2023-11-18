@@ -1,7 +1,14 @@
 import java.io.*;
 import java.util.*;
 
+/**
+ * The main class serves as the entruy point for the elevator simulation program
+ */
 public class Main {
+    /**
+     * The main method that initializes and runs the elevator simulation
+     * @param args Command-line arguments (property file)
+     */
     public static void main(String[] args) {
         String propertyFileName = args.length > 0 ? args[0] : "default.properties";
         String dir = System.getProperty("user.dir");
@@ -17,6 +24,13 @@ public class Main {
         simulation.runSimulation();
     }
 
+    /**
+     * Loads properties from a property file and return a Properties object
+     * If the file is not found or an error occurs, default values are used
+     *
+     * @param filePath THe path of the property file
+     * @return A properties object containing the loaded or default properties
+     */
     public static Properties loadProperties(String filePath) {
         Properties properties = new Properties();
         Map<String, String> map = new HashMap<>();

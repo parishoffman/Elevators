@@ -3,6 +3,10 @@ import java.util.PriorityQueue;
 import java.util.Properties;
 import java.util.Queue;
 
+/**
+ * The Elevator class represents an elevator that is capable of moving
+ * between loading and unloading passengers, and handling stop requests
+ */
 public class Elevator {
      public PriorityQueue<Passenger> up;
      private PriorityQueue<Passenger> down;
@@ -13,6 +17,11 @@ public class Elevator {
      private int capacity;
      private final int numFloors;
      ElevatorSimulation simulation;
+
+    /**
+     * Constructs an elevator with the specified number of floors
+     * @param numFloors Total number of floors
+     */
      Elevator(int numFloors) {
          this.up = new PriorityQueue<>();
          this.down = new PriorityQueue<>();
@@ -23,21 +32,42 @@ public class Elevator {
          goingUp = true;
      }
 
+    /**
+     * Gets the current floor of the elevator
+     * @return The current floor
+     */
     public int getCurrentFloor() {
          return currentFloor;
     }
 
+    /**
+     * Checks if the elevator is currently moving up
+     * @return True if the elevatir is moving up, false otherwise
+     */
     public boolean isGoingUp() {
          return goingUp;
     }
 
+    /**
+     * Gets the queue of passengers currently in the elevator
+     * @return The queue of passengers
+     */
     public Queue<Passenger> getPassengerQueue() {
          return up;
     }
 
+    /**
+     * Gets the queue of floors where the elevator needs to stop
+     * @return The queue of stop requests
+     */
     public Queue<Integer> getRequestQueue() {
          return stopUp;
     }
+
+    /**
+     * Loads passengers from the specified queue into the elevator
+     * @param peopleWaiting The queue of passengers waiting for the elevator
+     */
     public void load(Queue<Passenger> peopleWaiting) {
          while (!peopleWaiting.isEmpty()) {
              Passenger data = peopleWaiting.remove();
@@ -55,6 +85,10 @@ public class Elevator {
          }
      }
 
+    /**
+     * Unloads passengers from the elevator whose destination is the current floor
+     * @return The queue of passengerse leaving the elevator
+     */
     public Queue<Passenger> unload() {
         PriorityQueue<Passenger> passengersLeaving = new PriorityQueue<>();
          if (goingUp) {
@@ -70,6 +104,9 @@ public class Elevator {
          return passengersLeaving;
     }
 
+    /**
+     * Moves the elevator to the next floor based on its current direction and stop requests
+     */
     public void travel() {
 
         int prevFloor = currentFloor;
@@ -100,6 +137,10 @@ public class Elevator {
 
     }
 
+    /**
+     * Adds a floor to the queue of stop requests based on the current direction
+     * @param floor The floor where the elevator should stop
+     */
     public void requestStop(int floor) {
          if (floor > currentFloor) {
              stopUp.add(floor);
