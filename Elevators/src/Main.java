@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.*;
 
 /**
- * The main class serves as the entruy point for the elevator simulation program
+ * The main class serves as the entry point for the elevator simulation program
  */
 public class Main {
     /**

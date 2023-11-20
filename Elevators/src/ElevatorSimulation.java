@@ -42,25 +42,35 @@ public class ElevatorSimulation {
      * Runs the elevator simulation, generating passengers, moving elevators,
      * and calculating statistics
      */
-    public void runSimulation() {
+    public void runSimulation(String structure) {
             passengerWaitTimes = new HashMap<>();
+            Random random = new Random();
             for (int i = 0; i < tick; i++) {
-                Random random = new Random();
-                float randomFloat = random.nextFloat();
-                int requestedFloor = -1;
-                if (randomFloat < ratio) {
-                    int endFloor = random.nextInt(1, floors.size());
-                    int startFloor = random.nextInt(1, floors.size());
-                    int startTime = i;
-                    floors.get(startFloor).generatePassenger(startTime, startFloor, endFloor);
-                    requestedFloor = startFloor;
+                List<Integer> requestedFloors;
+                if (structure.equals("linked")) {
+                    requestedFloors = new LinkedList<>();
+                }
+                else {
+                    requestedFloors = new ArrayList<>();
                 }
 
+                for (int floor = 0; floor < floors.size(); floor++) {
+                    float randomFloat = random.nextFloat();
+                    if (randomFloat < ratio) {
+                        int endFloor = random.nextInt(1, floors.size());
+                        floors.get(floor).generatePassenger(i, floor + 1, endFloor);
+                        requestedFloors.add(floor);
+                    }
+                }
+
+
                 for (Elevator elevator: elevators) {
-                    if (requestedFloor != -1 && elevator.isGoingUp() && requestedFloor > elevator.getCurrentFloor()) {
-                        elevator.requestStop(requestedFloor);
-                    } else if (requestedFloor != -1 && !elevator.isGoingUp() && requestedFloor < elevator.getCurrentFloor()) {
-                        elevator.requestStop(requestedFloor);
+                    for (Integer requestedFloor : requestedFloors) {
+                        if (requestedFloor != -1 && elevator.isGoingUp() && requestedFloor > elevator.getCurrentFloor()) {
+                            elevator.requestStop(requestedFloor);
+                        } else if (requestedFloor != -1 && !elevator.isGoingUp() && requestedFloor < elevator.getCurrentFloor()) {
+                            elevator.requestStop(requestedFloor);
+                        }
                     }
                     Floor currentFloor = floors.get(elevator.getCurrentFloor());
                     if (!currentFloor.upQueue().isEmpty()) {
