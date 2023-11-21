@@ -16,7 +16,6 @@ public class Elevator {
      private boolean goingUp;
      private final int capacity;
      private final int numFloors;
-     ElevatorSimulation simulation;
 
     /**
      * Constructs an elevator with the specified number of floors
@@ -65,6 +64,10 @@ public class Elevator {
          return stopUp;
     }
 
+    /**
+     * Checks to see if the elevator is at capacity
+     * @return True if the elevator has space for more passengers
+     */
     public boolean hasSpace() {
         return (up.size() + down.size()) < capacity;
     }
@@ -112,20 +115,6 @@ public class Elevator {
      * Moves the elevator to the next floor based on its current direction and stop requests
      */
     public void travel() {
-        System.out.println("------------------------------");
-        System.out.println("Current Floor: " + currentFloor);
-        System.out.println("Going Up passengers: " + up.size());
-        System.out.println("Going Down Passengers: " + down.size());
-        System.out.println("Requested Up passengers: " + stopUp.size());
-        System.out.println("Requested Down Passengers: " + stopDown.size());
-
-        if (!stopUp.isEmpty()) {
-            System.out.println("Stop Up peek: " + stopUp.peek());
-        }
-        if (!up.isEmpty()) {
-            System.out.println("Up peek: " + up.peek().getEndFloor());
-
-        }
         int prevFloor = currentFloor;
         if (goingUp) {
             if (!stopUp.isEmpty()) {

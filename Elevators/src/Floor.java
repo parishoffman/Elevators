@@ -1,3 +1,4 @@
+import java.util.ArrayDeque;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -14,10 +15,16 @@ class Floor {
      * Constructs a Floor object with the specified floor number
      * @param floorNum The floor number
      */
-    public Floor(int floorNum) {
+    public Floor(int floorNum, String structure) {
         this.floorNum = floorNum;
-        this.up = new LinkedList<>();
-        this.down = new LinkedList<>();
+        if (structure.equals("linked")) {
+            this.up = new LinkedList<>();
+            this.down = new LinkedList<>();
+        }
+        else {
+            this.up = new ArrayDeque<>();
+            this.down = new ArrayDeque<>();
+        }
     }
 
     /**

@@ -14,15 +14,14 @@ public class Main {
         String dir = System.getProperty("user.dir");
         String filePath = dir + File.separator + propertyFileName;
 
-
         Properties properties = loadProperties(filePath);
         String structure = properties.getProperty("structures");
         int numTicks = Integer.parseInt((properties.getProperty("duration")));
         int numElevators = Integer.parseInt(properties.getProperty("elevators"));
         int numFloors = Integer.parseInt(properties.getProperty("floors"));
         float ratio = Float.parseFloat(properties.getProperty("passengers"));
-        int capacity = Integer.parseInt(properties.getProperty("capacity"));
-        ElevatorSimulation simulation = new ElevatorSimulation(numElevators, numFloors, numTicks, ratio, capacity);
+        int capacity = Integer.parseInt(properties.getProperty("elevatorCapacity"));
+        ElevatorSimulation simulation = new ElevatorSimulation(structure, numElevators, numFloors, numTicks, ratio, capacity);
         simulation.runSimulation(structure);
     }
 

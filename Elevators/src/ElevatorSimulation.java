@@ -11,7 +11,6 @@ import java.util.*;
 public class ElevatorSimulation {
         private List<Elevator> elevators;
         private List<Floor> floors;
-        private List<Integer> times;
         private int tick;
         private float ratio;
         private Map<Passenger, Integer> passengerWaitTimes;
@@ -23,9 +22,15 @@ public class ElevatorSimulation {
      * @param tick Total number of ticks for the simulation
      * @param ratio The ratio of generating passengers in each tick
      */
-        public ElevatorSimulation(int numElevators, int numFloors, int tick, float ratio, int capacity) {
-            this.elevators = new ArrayList<>();
-            this.floors = new ArrayList<>();
+        public ElevatorSimulation(String structure, int numElevators, int numFloors, int tick, float ratio, int capacity) {
+            if (structure.equals("linked")) {
+                this.elevators = new LinkedList<>();
+                this.floors = new LinkedList<>();
+            }
+            else {
+                this.elevators = new ArrayList<>();
+                this.floors = new ArrayList<>();
+            }
             this.ratio = ratio;
             this.tick = tick;
 
@@ -34,7 +39,7 @@ public class ElevatorSimulation {
             }
 
             for (int i = 1; i <= numFloors; i++) {
-                floors.add(new Floor(i));
+                floors.add(new Floor(i, structure));
             }
         }
 
@@ -64,10 +69,6 @@ public class ElevatorSimulation {
                 }
 
                 for (Elevator elevator: elevators) {
-                   /* System.out.println("--------------------------------------------");
-                    System.out.println("Elevator floor: " + elevator.getCurrentFloor());
-                    System.out.println("Passengers on the elevator: " + elevator.getPassengerQueue().size());
-                    System.out.println("Requested Passengers: " + elevator.getRequestQueue().size());*/
                     for (Integer requestedFloor : requestedFloors) {
                         if (elevator.isGoingUp() && requestedFloor > elevator.getCurrentFloor()) {
                             elevator.requestStop(requestedFloor);
