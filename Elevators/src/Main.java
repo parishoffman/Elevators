@@ -16,12 +16,14 @@ public class Main {
 
 
         Properties properties = loadProperties(filePath);
+        String structure = properties.getProperty("structures");
         int numTicks = Integer.parseInt((properties.getProperty("duration")));
         int numElevators = Integer.parseInt(properties.getProperty("elevators"));
         int numFloors = Integer.parseInt(properties.getProperty("floors"));
         float ratio = Float.parseFloat(properties.getProperty("passengers"));
-        ElevatorSimulation simulation = new ElevatorSimulation(numElevators, numFloors, numTicks, ratio);
-        simulation.runSimulation();
+        int capacity = Integer.parseInt(properties.getProperty("capacity"));
+        ElevatorSimulation simulation = new ElevatorSimulation(numElevators, numFloors, numTicks, ratio, capacity);
+        simulation.runSimulation(structure);
     }
 
     /**

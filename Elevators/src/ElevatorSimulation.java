@@ -23,14 +23,14 @@ public class ElevatorSimulation {
      * @param tick Total number of ticks for the simulation
      * @param ratio The ratio of generating passengers in each tick
      */
-        public ElevatorSimulation(int numElevators, int numFloors, int tick, float ratio) {
+        public ElevatorSimulation(int numElevators, int numFloors, int tick, float ratio, int capacity) {
             this.elevators = new ArrayList<>();
             this.floors = new ArrayList<>();
             this.ratio = ratio;
             this.tick = tick;
 
             for (int i = 0; i < numElevators; i++) {
-                elevators.add(new Elevator(numFloors));
+                elevators.add(new Elevator(numFloors, capacity));
             }
 
             for (int i = 1; i <= numFloors; i++) {
@@ -63,24 +63,31 @@ public class ElevatorSimulation {
                     }
                 }
 
-
                 for (Elevator elevator: elevators) {
+                   /* System.out.println("--------------------------------------------");
+                    System.out.println("Elevator floor: " + elevator.getCurrentFloor());
+                    System.out.println("Passengers on the elevator: " + elevator.getPassengerQueue().size());
+                    System.out.println("Requested Passengers: " + elevator.getRequestQueue().size());*/
                     for (Integer requestedFloor : requestedFloors) {
-                        if (requestedFloor != -1 && elevator.isGoingUp() && requestedFloor > elevator.getCurrentFloor()) {
+                        if (elevator.isGoingUp() && requestedFloor > elevator.getCurrentFloor()) {
                             elevator.requestStop(requestedFloor);
-                        } else if (requestedFloor != -1 && !elevator.isGoingUp() && requestedFloor < elevator.getCurrentFloor()) {
+                        } else if (!elevator.isGoingUp() && requestedFloor < elevator.getCurrentFloor()) {
                             elevator.requestStop(requestedFloor);
                         }
                     }
                     Floor currentFloor = floors.get(elevator.getCurrentFloor());
-                    if (!currentFloor.upQueue().isEmpty()) {
+                    if (elevator.isGoingUp()) {
                         elevator.load(currentFloor.upQueue());
                     }
+                    else {
+                        elevator.load(currentFloor.downQueue());
+                    }
+
                     elevator.travel();
 
                     Queue<Passenger> unloadedPassengers = elevator.unload();
 
-                   for (Passenger passenger : elevator.getPassengerQueue()) {
+                    for (Passenger passenger : unloadedPassengers) {
                         if (!passengerWaitTimes.containsKey(passenger)) {
                             passengerWaitTimes.put(passenger, i - passenger.getStartTime());
                         }

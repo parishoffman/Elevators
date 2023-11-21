@@ -14,7 +14,7 @@ public class Elevator {
      private PriorityQueue<Integer> stopDown;
      private int currentFloor;
      private boolean goingUp;
-     private int capacity;
+     private final int capacity;
      private final int numFloors;
      ElevatorSimulation simulation;
 
@@ -22,7 +22,7 @@ public class Elevator {
      * Constructs an elevator with the specified number of floors
      * @param numFloors Total number of floors
      */
-     Elevator(int numFloors) {
+     Elevator(int numFloors, int capacity) {
          this.up = new PriorityQueue<>();
          this.down = new PriorityQueue<>();
          this.stopUp = new PriorityQueue<>();
@@ -30,6 +30,7 @@ public class Elevator {
          this.currentFloor = 1;
          this.numFloors = numFloors;
          goingUp = true;
+         this.capacity = capacity;
      }
 
     /**
@@ -64,12 +65,15 @@ public class Elevator {
          return stopUp;
     }
 
+    public boolean hasSpace() {
+        return (up.size() + down.size()) < capacity;
+    }
     /**
      * Loads passengers from the specified queue into the elevator
      * @param peopleWaiting The queue of passengers waiting for the elevator
      */
     public void load(Queue<Passenger> peopleWaiting) {
-         while (!peopleWaiting.isEmpty()) {
+         while (!peopleWaiting.isEmpty() && hasSpace()) {
              Passenger data = peopleWaiting.remove();
              if (data.getEndFloor() > currentFloor) {
                  up.add(data);
@@ -87,7 +91,7 @@ public class Elevator {
 
     /**
      * Unloads passengers from the elevator whose destination is the current floor
-     * @return The queue of passengerse leaving the elevator
+     * @return The queue of passengers leaving the elevator
      */
     public Queue<Passenger> unload() {
         PriorityQueue<Passenger> passengersLeaving = new PriorityQueue<>();
@@ -108,7 +112,20 @@ public class Elevator {
      * Moves the elevator to the next floor based on its current direction and stop requests
      */
     public void travel() {
+        System.out.println("------------------------------");
+        System.out.println("Current Floor: " + currentFloor);
+        System.out.println("Going Up passengers: " + up.size());
+        System.out.println("Going Down Passengers: " + down.size());
+        System.out.println("Requested Up passengers: " + stopUp.size());
+        System.out.println("Requested Down Passengers: " + stopDown.size());
 
+        if (!stopUp.isEmpty()) {
+            System.out.println("Stop Up peek: " + stopUp.peek());
+        }
+        if (!up.isEmpty()) {
+            System.out.println("Up peek: " + up.peek().getEndFloor());
+
+        }
         int prevFloor = currentFloor;
         if (goingUp) {
             if (!stopUp.isEmpty()) {
@@ -133,6 +150,13 @@ public class Elevator {
             else {
                 currentFloor = Math.max(currentFloor - 5, 1);
             }
+        }
+
+        while (!stopUp.isEmpty() && stopUp.peek() == currentFloor) {
+            stopUp.remove();
+        }
+        while (!stopDown.isEmpty() && stopDown.peek() == currentFloor) {
+            stopDown.remove();
         }
 
     }
